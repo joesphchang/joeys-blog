@@ -4,38 +4,37 @@ import axios from 'axios';
 import { AuthContext } from '../context/authContext';
 
 const Login = () => {
-    const [ inputs, setInputs ] = useState({
+  const [inputs, setInputs] = useState({
     username: "",
     password: "",
   });
+  const [err, setError] = useState(null);
 
   const navigate = useNavigate();
 
-  const { currentUser } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
-  console.log(currentUser);
 
-  const [err, setError ] = useState(null);
-  const handleChange = e => {
-    setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8800/auth/login", inputs)
-      navigate('/');
-    } catch (error) {
-      setError(error.response.data);
+      await login(inputs)
+      navigate("/");
+    } catch (err) {
+      setError(err.response.data);
     }
-  }
+  };
 
   console.log(inputs);
   return (
     <div className='login-container'>
       <h1>Login</h1>
       <form>
-        <input type="text" placeholder='username' name='name' onChange={handleChange} />
+        <input type="text" placeholder='username' name='username' onChange={handleChange} />
         <input type="password" placeholder='password' name='password' onChange={handleChange} />
         <button onClick={handleSubmit} >Login</button>
         {err && <p>{err}</p> }
